@@ -1,5 +1,6 @@
 package com.alkemy.challenge.disney.entity;
 
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +16,7 @@ import java.util.Set;
 @Table(name = "films")
 @Getter
 @Setter
+
 public class FilmEntity {
 
     @Id
@@ -23,18 +25,21 @@ public class FilmEntity {
     private String image;
     private String title;
     @Column(name = "created_date")
-    @DateTimeFormat(pattern = "yyy/MM/dd")
+    @DateTimeFormat(pattern = "yyyy/MM/dd")
     private LocalDate creationDate;
     private Integer qualification;
+    private boolean deleted = Boolean.FALSE;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER
+            , cascade = { CascadeType.PERSIST, CascadeType.MERGE }
+    )
     @JoinColumn(name = "gender_id", insertable = false, updatable = false)
     private GenderEntity gender;
 
     @Column(name = "gender_id", nullable = false)
     private Long genderID;
 
-    @ManyToMany(
+    @ManyToMany( fetch = FetchType.LAZY,
             cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(
             name = "rel_film_actor",

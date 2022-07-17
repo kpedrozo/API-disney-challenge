@@ -1,13 +1,13 @@
 package com.alkemy.challenge.disney.mapper;
 
+import com.alkemy.challenge.disney.dto.ActorBasicDTO;
 import com.alkemy.challenge.disney.dto.ActorDTO;
-import com.alkemy.challenge.disney.dto.FilmDTO;
 import com.alkemy.challenge.disney.entity.ActorEntity;
 import com.alkemy.challenge.disney.entity.FilmEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 @Component
 public class ActorMapper {
 
+    @Autowired
     private FilmMapper filmMapper;
 
     public ActorEntity actorDTO2Entity(ActorDTO dto, boolean loadFilms) {
@@ -25,17 +26,20 @@ public class ActorMapper {
         actorEntity.setAge(dto.getAge());
         actorEntity.setWeight(dto.getWeight());
         actorEntity.setStory(dto.getStory());
+        actorEntity.setDeleted(dto.isDeleted());
         if (loadFilms) {
-            Set<FilmEntity> filmsEntity = this.filmMapper.filmDTOList2Entity(dto.getFilms().stream().collect(Collectors.toList()), false);
-            actorEntity.setFilms(filmsEntity);
+            List<FilmEntity> filmsEntity = this.filmMapper.filmDTOList2Entity(dto.getFilms(), false);
+            actorEntity.setFilms(filmsEntity.stream().collect(Collectors.toSet()));
         }
         return actorEntity;
     }
 
-    public Set<ActorEntity> actorsDTOList2Entity(List<ActorDTO> dtos, boolean loadFilms) {
-        Set <ActorEntity> entities = new HashSet<>();
+    public List<ActorEntity> actorsDTOList2Entity(List<ActorDTO> dtos, boolean loadFilms) {
+        List<ActorEntity> entities = new ArrayList<>();
         for (ActorDTO dto : dtos) {
-            entities.add(this.actorDTO2Entity(dto, loadFilms));
+            if (!dto.isDeleted()) {
+                entities.add(this.actorDTO2Entity(dto, loadFilms));
+            }
         }
         return entities;
     }
@@ -48,10 +52,12 @@ public class ActorMapper {
         actorDTO.setAge(entity.getAge());
         actorDTO.setWeight(entity.getWeight());
         actorDTO.setStory(entity.getStory());
+        actorDTO.setDeleted(entity.isDeleted());
 
         if (loadFilms) {
-            List<FilmDTO> filmsDTO = this.filmMapper.filmEntityList2DTOList(entity.getFilms().stream().collect(Collectors.toList()), false);
-            actorDTO.setFilms(filmsDTO);
+            Set<FilmEntity> films = entity.getFilms();
+            List<FilmEntity> filmEntities = new ArrayList<>(films);
+            actorDTO.setFilms(this.filmMapper.filmEntityList2DTOList(filmEntities, false));
         }
         return actorDTO;
     }
@@ -60,10 +66,19 @@ public class ActorMapper {
     public List<ActorDTO> actorEntityList2DTOList(List<ActorEntity> entities, boolean loadFilms) {
         List<ActorDTO> dtos = new ArrayList<>();
         for (ActorEntity entity : entities) {
-            dtos.add(this.actorEntity2DTO(entity, loadFilms));
+            if (!entity.isDeleted()) {
+                dtos.add(this.actorEntity2DTO(entity, loadFilms));
+            }
         }
         return dtos;
     }
 
 
+    public ActorEntity actorBasicDTO2Entity(ActorBasicDTO dto, ActorEntity entity) {
+        entity.setName(dto.getName());
+        entity.setAge(dto.getAge());
+        entity.setWeight(dto.getWeight());
+        return entity;
+    }
 }
+

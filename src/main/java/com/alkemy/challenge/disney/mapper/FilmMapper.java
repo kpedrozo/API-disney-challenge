@@ -1,13 +1,14 @@
 package com.alkemy.challenge.disney.mapper;
 
-import com.alkemy.challenge.disney.dto.ActorDTO;
+import com.alkemy.challenge.disney.dto.FilmBasicDTO;
 import com.alkemy.challenge.disney.dto.FilmDTO;
 import com.alkemy.challenge.disney.entity.ActorEntity;
 import com.alkemy.challenge.disney.entity.FilmEntity;
+import com.alkemy.challenge.disney.service.GenderService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -15,8 +16,12 @@ import java.util.stream.Collectors;
 @Component
 public class FilmMapper {
 
-    private ActorMapper actorMapper;
+    @Autowired
     private GenderMapper genderMapper;
+    @Autowired
+    private ActorMapper actorMapper;
+    @Autowired
+    private GenderService genderService;
 
     public FilmEntity filmDTO2Entity(FilmDTO dto, boolean loadActors) {
         FilmEntity filmEntity = new FilmEntity();
@@ -24,23 +29,26 @@ public class FilmMapper {
         filmEntity.setTitle(dto.getTitle());
         filmEntity.setCreationDate(dto.getCreationDate());
         filmEntity.setQualification(dto.getQualification());
-        filmEntity.setGender(this.genderMapper.genderDTO2Entity(dto.getGender()));
+        filmEntity.setDeleted(dto.isDeleted());
+        filmEntity.setGender(this.genderMapper.genderDTO2Entity(genderService.getById(dto.getGenderID())));
         filmEntity.setGenderID(dto.getGenderID());
-
         if (loadActors) {
-            Set<ActorEntity> actorsEntity = this.actorMapper.actorsDTOList2Entity(dto.getActors().stream().collect(Collectors.toList()), false);
-            filmEntity.setActors(actorsEntity);
+            List<ActorEntity> actorsEntity = this.actorMapper.actorsDTOList2Entity(dto.getActors(),false);
+            filmEntity.setActors(actorsEntity.stream().collect(Collectors.toSet()));
         }
         return filmEntity;
     }
 
-    public Set<FilmEntity> filmDTOList2Entity(List<FilmDTO> dtos, boolean loadActors) {
-        Set <FilmEntity> entities = new HashSet<>();
+    public List<FilmEntity> filmDTOList2Entity(List<FilmDTO> dtos, boolean loadActors) {
+        List <FilmEntity> entities = new ArrayList<>();
         for (FilmDTO dto : dtos) {
-            entities.add(this.filmDTO2Entity(dto, loadActors));
+            if (!dto.isDeleted()) {
+                entities.add(this.filmDTO2Entity(dto, loadActors));
+            }
         }
         return entities;
     }
+
 
     public FilmDTO filmEntity2DTO (FilmEntity entity, boolean loadActors) {
         FilmDTO filmDTO = new FilmDTO();
@@ -49,24 +57,35 @@ public class FilmMapper {
         filmDTO.setTitle(entity.getTitle());
         filmDTO.setCreationDate(entity.getCreationDate());
         filmDTO.setQualification(entity.getQualification());
+        filmDTO.setDeleted(entity.isDeleted());
         filmDTO.setGender(this.genderMapper.genderEntity2DTO(entity.getGender()));
         filmDTO.setGenderID(entity.getGenderID());
 
         // Al tener un parametro loadActors en FALSE, no re cargamos los actores, cuando desde actores pedimos las peliculas.
         if (loadActors) {
-            List<ActorDTO> actorsDTO = this.actorMapper.actorEntityList2DTOList(entity.getActors().stream().collect(Collectors.toList()), false);
-            filmDTO.setActors(actorsDTO);
+            Set<ActorEntity> actors = entity.getActors();
+            List<ActorEntity> actorEntities = new ArrayList<>(actors);
+            filmDTO.setActors(this.actorMapper.actorEntityList2DTOList(actorEntities, false));
         }
         return filmDTO;
     }
 
+
     public List<FilmDTO> filmEntityList2DTOList(List<FilmEntity> entities, boolean loadActors) {
         List <FilmDTO> dtos = new ArrayList<>();
         for (FilmEntity entity : entities) {
-            dtos.add(this.filmEntity2DTO(entity, loadActors));
+            if (!entity.isDeleted()){
+                dtos.add(this.filmEntity2DTO(entity, loadActors));
+            }
         }
         return dtos;
     }
 
-
+    public FilmEntity filmBasicDTO2Entity(FilmBasicDTO dto, FilmEntity entity) {
+        entity.setTitle(dto.getTitle());
+        entity.setQualification(dto.getQualification());
+        entity.setDeleted(dto.isDeleted());
+        entity.setGenderID(dto.getGenderID());
+        return entity;
+    }
 }

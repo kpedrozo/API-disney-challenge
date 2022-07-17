@@ -1,5 +1,6 @@
 package com.alkemy.challenge.disney.controller;
 
+import com.alkemy.challenge.disney.dto.ActorBasicDTO;
 import com.alkemy.challenge.disney.dto.ActorDTO;
 import com.alkemy.challenge.disney.service.ActorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,48 @@ public class ActorController {
         return ResponseEntity.ok().body(actors);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ActorDTO> getDetailsByID(@PathVariable Long id) {
+        ActorDTO actor = actorService.getDetailsByID(id);
+        return ResponseEntity.ok(actor);
+    }
+
+    @GetMapping("/id")
+    public ResponseEntity<ActorDTO> getActorById(@RequestParam (value = "id") Long id) {
+        ActorDTO actor = actorService.getDetailsByID(id);
+        return ResponseEntity.ok(actor);
+    }
+
+
     @PostMapping
     public ResponseEntity<ActorDTO> save(@RequestBody ActorDTO actor) {
         ActorDTO actorCreated = actorService.save(actor);
         return ResponseEntity.status(HttpStatus.CREATED).body(actorCreated);
+    }
+
+    //HACER UPTADE UTIILIZANDO PATCH !!! (LA DIFERENCIA CON PUT ES QUE :
+    // PATCH permite actualizar algunos valores sin reemplazar el objeto.
+    // put reemplaza el objeto.
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ActorDTO> update(@RequestBody ActorBasicDTO actor, @PathVariable ("id") Long id) {
+        ActorDTO actorUpdated = actorService.update(actor, id);
+        return ResponseEntity.ok(actorUpdated);
+    }
+
+
+
+
+
+    // para pasar el id en la URL
+    //@DeleteMapping("/{id}")
+    //public ResponseEntity<Void> delete(@PathVariable Long id) {
+
+    // para pasar el id como parametro
+    @DeleteMapping
+    public ResponseEntity<Void> delete(@RequestParam (value="id") Long id) {
+        actorService.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

@@ -1,8 +1,10 @@
 package com.alkemy.challenge.disney.dto;
 
+import com.alkemy.challenge.disney.entity.ActorEntity;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -14,8 +16,8 @@ public class ActorDTO {
     private Integer age;
     private Integer weight;
     private String story;
+    private boolean deleted;
     private List<FilmDTO> films;
-
 
 
 }

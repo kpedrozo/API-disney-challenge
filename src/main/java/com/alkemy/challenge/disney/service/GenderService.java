@@ -9,4 +9,6 @@ public interface GenderService {
     List<GenderDTO> getAllGenders();
 
     GenderDTO save(GenderDTO dto);
+
+    GenderDTO getById(Long id);
 }

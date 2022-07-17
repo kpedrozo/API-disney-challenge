@@ -29,5 +29,10 @@ public class GenderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(genderCreated);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<GenderDTO> getById(@PathVariable Long id) {
+        GenderDTO genderDTO = genderService.getById(id);
+        return ResponseEntity.ok().body(genderDTO);
+    }
 }
 

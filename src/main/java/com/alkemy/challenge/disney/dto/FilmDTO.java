@@ -15,7 +15,10 @@ public class FilmDTO {
     private String title;
     private LocalDate creationDate;
     private Integer qualification;
+    private boolean deleted;
     private GenderDTO gender;
     private Long genderID;
     private List<ActorDTO> actors;
+
+
 }

@@ -1,6 +1,5 @@
 package com.alkemy.challenge.disney.entity;
 
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +11,7 @@ import java.util.Set;
 @Table(name = "genders")
 @Getter
 @Setter
+
 public class GenderEntity {
 
     @Id

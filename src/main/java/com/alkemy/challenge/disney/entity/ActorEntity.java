@@ -1,5 +1,6 @@
 package com.alkemy.challenge.disney.entity;
 
+
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
@@ -15,6 +16,7 @@ import java.util.Set;
 @Setter
 @SQLDelete(sql = "UPDATE actors SET deleted = true WHERE id=?")
 @Where(clause = "deleted=false")
+
 public class ActorEntity {
 
     @Id
