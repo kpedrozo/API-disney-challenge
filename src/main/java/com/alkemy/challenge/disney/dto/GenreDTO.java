@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class GenderDTO {
+public class GenreDTO {
 
     private Long id;
     private String name;

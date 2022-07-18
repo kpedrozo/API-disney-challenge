@@ -1,6 +1,5 @@
 package com.alkemy.challenge.disney.entity;
 
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,10 +8,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "genders")
+@Table(name = "genres")
 @Getter
 @Setter
-public class GenderEntity {
+
+public class GenreEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +20,7 @@ public class GenderEntity {
     private String name;
     private String image;
 
-    @OneToMany(mappedBy = "gender")
+    @OneToMany(mappedBy = "genre")
     private Set<FilmEntity> films = new HashSet<>();
 
 }
