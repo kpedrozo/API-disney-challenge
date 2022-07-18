@@ -18,4 +18,8 @@ public interface FilmService {
     void delete(Long id);
 
     List<FilmDTO> getByFilters(String name, String genre, String creationDate, String order);
+
+    FilmDTO addActor(Long idFilm, Long idActor);
+
+    FilmDTO deleteActor(Long idFilm, Long idActor);
 }

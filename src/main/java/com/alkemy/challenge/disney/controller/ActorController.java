@@ -31,12 +31,6 @@ public class ActorController {
         return ResponseEntity.ok(actor);
     }
 
-    @GetMapping("/id")
-    public ResponseEntity<ActorDTO> getActorById(@RequestParam (value = "id") Long id) {
-        ActorDTO actor = actorService.getDetailsByID(id);
-        return ResponseEntity.ok(actor);
-    }
-
 
     @PostMapping
     public ResponseEntity<ActorDTO> save(@RequestBody ActorDTO actor) {
@@ -44,7 +38,7 @@ public class ActorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(actorCreated);
     }
 
-    //HACER UPTADE UTIILIZANDO PATCH !!! (LA DIFERENCIA CON PUT ES QUE :
+    //HACER UPTADE UTILIZANDO PATCH !!! (LA DIFERENCIA CON PUT ES QUE :
     // PATCH permite actualizar algunos valores sin reemplazar el objeto.
     // put reemplaza el objeto.
 
@@ -67,15 +61,8 @@ public class ActorController {
     }
 
 
-
-
-    // para pasar el id en la URL
-    //@DeleteMapping("/{id}")
-    //public ResponseEntity<Void> delete(@PathVariable Long id) {
-
-    // para pasar el id como parametro
-    @DeleteMapping
-    public ResponseEntity<Void> delete(@RequestParam (value="id") Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         actorService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

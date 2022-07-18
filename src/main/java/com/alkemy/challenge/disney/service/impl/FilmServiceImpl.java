@@ -3,8 +3,10 @@ package com.alkemy.challenge.disney.service.impl;
 import com.alkemy.challenge.disney.dto.FilmBasicDTO;
 import com.alkemy.challenge.disney.dto.FilmDTO;
 import com.alkemy.challenge.disney.dto.FilmFiltersDTO;
+import com.alkemy.challenge.disney.entity.ActorEntity;
 import com.alkemy.challenge.disney.entity.FilmEntity;
 import com.alkemy.challenge.disney.mapper.FilmMapper;
+import com.alkemy.challenge.disney.repository.ActorRepository;
 import com.alkemy.challenge.disney.repository.FilmRepository;
 import com.alkemy.challenge.disney.repository.specifications.FilmSpecification;
 import com.alkemy.challenge.disney.service.FilmService;
@@ -21,6 +23,9 @@ public class FilmServiceImpl implements FilmService {
 
     @Autowired
     private FilmRepository filmRepository;
+
+    @Autowired
+    private ActorRepository actorRepository;
 
     @Autowired
     private FilmSpecification filmSpecification;
@@ -68,6 +73,35 @@ public class FilmServiceImpl implements FilmService {
         List<FilmEntity> entities = filmRepository.findAll(filmSpecification.getByFilters(filtersDTO));
         List<FilmDTO> dtos = filmMapper.filmEntityFilterList2DTOList(entities);
         return dtos;
+    }
+
+
+    public FilmDTO addActor(Long idFilm, Long idActor) {
+        Boolean exists = filmRepository.existsById(idFilm);
+        if (exists) {
+            Boolean existsActor = actorRepository.existsById(idActor);
+            FilmEntity entity = filmRepository.getReferenceById(idFilm);
+            ActorEntity actor = actorRepository.getReferenceById(idActor);
+            entity.addActor(actor);
+            FilmEntity entitySaved = filmRepository.save(entity);
+            FilmDTO result = filmMapper.filmEntity2DTO(entitySaved, true);
+            return result;
+        }
+        return null;
+    }
+
+    @Override
+    public FilmDTO deleteActor(Long idFilm, Long idActor) {Boolean exists = filmRepository.existsById(idFilm);
+        if (exists) {
+            Boolean existsActor = actorRepository.existsById(idActor);
+            FilmEntity entity = filmRepository.getReferenceById(idFilm);
+            ActorEntity actor = actorRepository.getReferenceById(idActor);
+            entity.removeActor(actor);
+            FilmEntity entitySaved = filmRepository.save(entity);
+            FilmDTO result = filmMapper.filmEntity2DTO(entitySaved, true);
+            return result;
+        }
+        return null;
     }
 
     public List<FilmDTO> getAllFilms() {

@@ -1,6 +1,5 @@
 package com.alkemy.challenge.disney.controller;
 
-import com.alkemy.challenge.disney.dto.ActorDTO;
 import com.alkemy.challenge.disney.dto.FilmBasicDTO;
 import com.alkemy.challenge.disney.dto.FilmDTO;
 import com.alkemy.challenge.disney.service.FilmService;
@@ -10,8 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
-
 
 @RestController
 @RequestMapping("films")
@@ -32,8 +29,8 @@ public class FilmController {
         return ResponseEntity.status(HttpStatus.CREATED).body(filmCreated);
     }
 
-    @GetMapping("/id")
-    public ResponseEntity<FilmDTO> getById (@RequestParam (value = "id") Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<FilmDTO> getById (@PathVariable Long id) {
         FilmDTO film = filmService.getDetailsById(id);
         return ResponseEntity.ok(film);
     }
@@ -44,8 +41,8 @@ public class FilmController {
         return ResponseEntity.ok(filmUpdated);
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> delete(@RequestParam (value = "id") Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         filmService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
@@ -60,6 +57,22 @@ public class FilmController {
     ) {
         List<FilmDTO> films = filmService.getByFilters(name, genre, creationDate, order);
         return ResponseEntity.ok(films);
+    }
+
+    @PostMapping("/movies/{idMovie}/characters/{idCharacter}")
+    public ResponseEntity<FilmDTO> addActor (
+            @PathVariable ("idMovie") Long idFilm,
+            @PathVariable ("idCharacter") Long idActor) {
+        FilmDTO film = filmService.addActor(idFilm, idActor);
+        return ResponseEntity.ok(film);
+    }
+
+    @DeleteMapping("/movies/{idMovie}/characters/{idCharacter}")
+    public ResponseEntity<FilmDTO> deleteActor (
+            @PathVariable ("idMovie") Long idFilm,
+            @PathVariable ("idCharacter") Long idActor) {
+        FilmDTO film = filmService.deleteActor(idFilm, idActor);
+        return ResponseEntity.ok(film);
     }
 
 }

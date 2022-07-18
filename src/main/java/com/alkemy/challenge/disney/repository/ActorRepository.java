@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ActorRepository extends JpaRepository<ActorEntity, Long> , JpaSpecificationExecutor<ActorEntity> {
+public interface ActorRepository extends JpaRepository<ActorEntity, Long>, JpaSpecificationExecutor<ActorEntity> {
 
     List<ActorEntity> findAll(Specification<ActorEntity> spec);
 

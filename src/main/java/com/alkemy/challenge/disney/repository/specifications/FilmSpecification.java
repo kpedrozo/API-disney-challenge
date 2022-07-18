@@ -22,16 +22,16 @@ public class FilmSpecification {
             if (StringUtils.hasLength(filtersDTO.getName())) {
                 predicates.add(
                         criteriaBuilder.like(
-                                criteriaBuilder.lower(root.get("name")),
+                                criteriaBuilder.lower(root.get("title")),
                                 "%" + filtersDTO.getName().toLowerCase() + "%"
                         )
                 );
             }
 
             if (StringUtils.hasLength(filtersDTO.getGenre())) {
+                String genreId = filtersDTO.getGenre();
                 predicates.add(
-                        criteriaBuilder.like(criteriaBuilder.lower(root.get("genre")), "%" + filtersDTO.getGenre().toLowerCase() + "%"
-                        )
+                        criteriaBuilder.equal((root.get("genre").get("id")), genreId)
                 );
             }
 

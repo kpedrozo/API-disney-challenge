@@ -89,4 +89,24 @@ public class FilmMapper {
         entity.setGenreID(dto.getGenreID());
         return entity;
     }
+
+    public List<FilmDTO> filmEntityFilterList2DTOList(List<FilmEntity> entities) {
+        List<FilmDTO> dtos = new ArrayList<>();
+        for (FilmEntity entity : entities) {
+            if (!entity.isDeleted()) {
+                dtos.add(this.filmEntityFilter2DTO(entity));
+            }
+        }
+        return dtos;
+    }
+
+    private FilmDTO filmEntityFilter2DTO(FilmEntity entity) {
+        FilmDTO filmDTO = new FilmDTO();
+        filmDTO.setId(entity.getId());
+        filmDTO.setImage(entity.getImage());
+        filmDTO.setTitle(entity.getTitle());
+        filmDTO.setCreationDate(entity.getCreationDate());
+        return filmDTO;
+    }
+
 }
