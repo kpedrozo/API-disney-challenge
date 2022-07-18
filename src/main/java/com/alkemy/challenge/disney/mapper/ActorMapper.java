@@ -4,6 +4,7 @@ import com.alkemy.challenge.disney.dto.ActorBasicDTO;
 import com.alkemy.challenge.disney.dto.ActorDTO;
 import com.alkemy.challenge.disney.entity.ActorEntity;
 import com.alkemy.challenge.disney.entity.FilmEntity;
+import com.alkemy.challenge.disney.service.ActorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +28,7 @@ public class ActorMapper {
         actorEntity.setWeight(dto.getWeight());
         actorEntity.setStory(dto.getStory());
         actorEntity.setDeleted(dto.isDeleted());
-        if (loadFilms) {
+        if (loadFilms & !(dto.getFilms()==null)) {
             List<FilmEntity> filmsEntity = this.filmMapper.filmDTOList2Entity(dto.getFilms(), false);
             actorEntity.setFilms(filmsEntity.stream().collect(Collectors.toSet()));
         }
@@ -79,6 +80,24 @@ public class ActorMapper {
         entity.setAge(dto.getAge());
         entity.setWeight(dto.getWeight());
         return entity;
+    }
+
+    public List<ActorDTO> actorEntityFilterList2DTOList(List<ActorEntity> entities) {
+        List<ActorDTO> dtos = new ArrayList<>();
+        for (ActorEntity entity : entities) {
+            if (!entity.isDeleted()) {
+                dtos.add(this.actorEntityFilter2DTO(entity));
+            }
+        }
+        return dtos;
+    }
+
+    private ActorDTO actorEntityFilter2DTO(ActorEntity entity) {
+        ActorDTO actorDTO = new ActorDTO();
+        actorDTO.setId(entity.getId());
+        actorDTO.setImage(entity.getImage());
+        actorDTO.setName(entity.getName());
+        return actorDTO;
     }
 }
 

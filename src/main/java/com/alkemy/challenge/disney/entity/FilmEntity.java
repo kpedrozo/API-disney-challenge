@@ -33,14 +33,14 @@ public class FilmEntity {
     @ManyToOne(fetch = FetchType.EAGER
             , cascade = { CascadeType.PERSIST, CascadeType.MERGE }
     )
-    @JoinColumn(name = "gender_id", insertable = false, updatable = false)
-    private GenderEntity gender;
+    @JoinColumn(name = "genre_id", insertable = false, updatable = false)
+    private GenreEntity genre;
 
-    @Column(name = "gender_id", nullable = false)
-    private Long genderID;
+    @Column(name = "genre_id", nullable = false)
+    private Long genreID;
 
     @ManyToMany( fetch = FetchType.LAZY,
-            cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+            cascade = {  CascadeType.MERGE, CascadeType.PERSIST })
     @JoinTable(
             name = "rel_film_actor",
             joinColumns = @JoinColumn(name = "film_id"),

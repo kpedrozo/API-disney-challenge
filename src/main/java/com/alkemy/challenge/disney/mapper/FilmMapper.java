@@ -4,7 +4,7 @@ import com.alkemy.challenge.disney.dto.FilmBasicDTO;
 import com.alkemy.challenge.disney.dto.FilmDTO;
 import com.alkemy.challenge.disney.entity.ActorEntity;
 import com.alkemy.challenge.disney.entity.FilmEntity;
-import com.alkemy.challenge.disney.service.GenderService;
+import com.alkemy.challenge.disney.service.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,11 +17,11 @@ import java.util.stream.Collectors;
 public class FilmMapper {
 
     @Autowired
-    private GenderMapper genderMapper;
+    private GenreMapper genreMapper;
     @Autowired
     private ActorMapper actorMapper;
     @Autowired
-    private GenderService genderService;
+    private GenreService genreService;
 
     public FilmEntity filmDTO2Entity(FilmDTO dto, boolean loadActors) {
         FilmEntity filmEntity = new FilmEntity();
@@ -30,8 +30,9 @@ public class FilmMapper {
         filmEntity.setCreationDate(dto.getCreationDate());
         filmEntity.setQualification(dto.getQualification());
         filmEntity.setDeleted(dto.isDeleted());
-        filmEntity.setGender(this.genderMapper.genderDTO2Entity(genderService.getById(dto.getGenderID())));
-        filmEntity.setGenderID(dto.getGenderID());
+        filmEntity.setGenre(this.genreMapper.genreDTO2Entity(genreService.getById(dto.getGenreID())));
+
+        filmEntity.setGenreID(dto.getGenreID());
         if (loadActors) {
             List<ActorEntity> actorsEntity = this.actorMapper.actorsDTOList2Entity(dto.getActors(),false);
             filmEntity.setActors(actorsEntity.stream().collect(Collectors.toSet()));
@@ -58,8 +59,8 @@ public class FilmMapper {
         filmDTO.setCreationDate(entity.getCreationDate());
         filmDTO.setQualification(entity.getQualification());
         filmDTO.setDeleted(entity.isDeleted());
-        filmDTO.setGender(this.genderMapper.genderEntity2DTO(entity.getGender()));
-        filmDTO.setGenderID(entity.getGenderID());
+        filmDTO.setGenre(this.genreMapper.genreEntity2DTO(entity.getGenre()));
+        filmDTO.setGenreID(entity.getGenreID());
 
         // Al tener un parametro loadActors en FALSE, no re cargamos los actores, cuando desde actores pedimos las peliculas.
         if (loadActors) {
@@ -85,7 +86,7 @@ public class FilmMapper {
         entity.setTitle(dto.getTitle());
         entity.setQualification(dto.getQualification());
         entity.setDeleted(dto.isDeleted());
-        entity.setGenderID(dto.getGenderID());
+        entity.setGenreID(dto.getGenreID());
         return entity;
     }
 }

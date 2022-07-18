@@ -10,5 +10,6 @@ public class FilmBasicDTO {
     private String title;
     private Integer qualification;
     private boolean deleted;
-    private Long genderID;
+    private Long genreID;
 }
+

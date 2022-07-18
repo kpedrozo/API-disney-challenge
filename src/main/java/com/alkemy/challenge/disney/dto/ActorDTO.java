@@ -13,8 +13,8 @@ public class ActorDTO {
     private Long id;
     private String image;
     private String name;
-    private Integer age;
-    private Integer weight;
+    private Long age;
+    private Long weight;
     private String story;
     private boolean deleted;
     private List<FilmDTO> films;

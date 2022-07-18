@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 
 @RestController
@@ -53,6 +54,17 @@ public class ActorController {
         return ResponseEntity.ok(actorUpdated);
     }
 
+    @GetMapping("/characters")
+    public ResponseEntity<List<ActorDTO>> getDetailsByFilters (
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String age,
+            @RequestParam(required = false) String weight,
+            @RequestParam(required = false) Set<Long> films,
+            @RequestParam(required = false, defaultValue = "ASC") String order
+    ) {
+        List<ActorDTO> actors = actorService.getByFilters(name, age, weight, films, order);
+        return ResponseEntity.ok(actors);
+    }
 
 
 

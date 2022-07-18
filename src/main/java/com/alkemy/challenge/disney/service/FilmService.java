@@ -16,4 +16,6 @@ public interface FilmService {
     FilmDTO update(FilmBasicDTO film, Long id);
 
     void delete(Long id);
+
+    List<FilmDTO> getByFilters(String name, String genre, String creationDate, String order);
 }

@@ -2,14 +2,17 @@ package com.alkemy.challenge.disney.service.impl;
 
 import com.alkemy.challenge.disney.dto.ActorBasicDTO;
 import com.alkemy.challenge.disney.dto.ActorDTO;
+import com.alkemy.challenge.disney.dto.ActorFiltersDTO;
 import com.alkemy.challenge.disney.entity.ActorEntity;
 import com.alkemy.challenge.disney.mapper.ActorMapper;
 import com.alkemy.challenge.disney.repository.ActorRepository;
+import com.alkemy.challenge.disney.repository.specifications.ActorSpecification;
 import com.alkemy.challenge.disney.service.ActorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ActorServiceImpl implements ActorService {
@@ -22,6 +25,9 @@ public class ActorServiceImpl implements ActorService {
 
     @Autowired
     private ActorRepository actorRepository;
+
+    @Autowired
+    private ActorSpecification actorSpecification;
 
     public ActorDTO save(ActorDTO dto) {
         ActorEntity entity = actorMapper.actorDTO2Entity(dto, true);
@@ -40,6 +46,15 @@ public class ActorServiceImpl implements ActorService {
             return result;
         }
         return null;
+    }
+
+
+
+    public List<ActorDTO> getByFilters(String name, String age, String weight, Set<Long> films, String order) {
+        ActorFiltersDTO filtersDTO = new ActorFiltersDTO (name, age, weight, films, order);
+        List<ActorEntity> entities = actorRepository.findAll(actorSpecification.getByFilters(filtersDTO));
+        List<ActorDTO> dtos = actorMapper.actorEntityFilterList2DTOList(entities);
+        return dtos;
     }
 
     public List<ActorDTO> getAllActors() {

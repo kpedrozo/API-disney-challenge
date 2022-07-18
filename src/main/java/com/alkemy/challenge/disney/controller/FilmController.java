@@ -1,5 +1,6 @@
 package com.alkemy.challenge.disney.controller;
 
+import com.alkemy.challenge.disney.dto.ActorDTO;
 import com.alkemy.challenge.disney.dto.FilmBasicDTO;
 import com.alkemy.challenge.disney.dto.FilmDTO;
 import com.alkemy.challenge.disney.service.FilmService;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 
 @RestController
@@ -20,7 +22,7 @@ public class FilmController {
 
     @GetMapping
     public ResponseEntity<List<FilmDTO>> getAll() {
-        List<FilmDTO> films = this.filmService.getAllFilms();
+        List<FilmDTO> films = filmService.getAllFilms();
         return ResponseEntity.ok().body(films);
     }
 
@@ -46,6 +48,18 @@ public class FilmController {
     public ResponseEntity<Void> delete(@RequestParam (value = "id") Long id) {
         filmService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+
+    @GetMapping("/movies")
+    public ResponseEntity<List<FilmDTO>> getDetailsByFilters (
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String genre,
+            @RequestParam(required = false) String creationDate,
+            @RequestParam(required = false, defaultValue = "ASC") String order
+    ) {
+        List<FilmDTO> films = filmService.getByFilters(name, genre, creationDate, order);
+        return ResponseEntity.ok(films);
     }
 
 }

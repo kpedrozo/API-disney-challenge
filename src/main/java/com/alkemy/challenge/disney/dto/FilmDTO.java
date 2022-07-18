@@ -16,8 +16,8 @@ public class FilmDTO {
     private LocalDate creationDate;
     private Integer qualification;
     private boolean deleted;
-    private GenderDTO gender;
-    private Long genderID;
+    private GenreDTO genre;
+    private Long genreID;
     private List<ActorDTO> actors;
 
 

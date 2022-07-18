@@ -2,9 +2,11 @@ package com.alkemy.challenge.disney.service.impl;
 
 import com.alkemy.challenge.disney.dto.FilmBasicDTO;
 import com.alkemy.challenge.disney.dto.FilmDTO;
+import com.alkemy.challenge.disney.dto.FilmFiltersDTO;
 import com.alkemy.challenge.disney.entity.FilmEntity;
 import com.alkemy.challenge.disney.mapper.FilmMapper;
 import com.alkemy.challenge.disney.repository.FilmRepository;
+import com.alkemy.challenge.disney.repository.specifications.FilmSpecification;
 import com.alkemy.challenge.disney.service.FilmService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,9 +17,13 @@ import java.util.List;
 public class FilmServiceImpl implements FilmService {
 
     @Autowired
-    FilmMapper filmMapper;
+    private FilmMapper filmMapper;
+
     @Autowired
-    FilmRepository filmRepository;
+    private FilmRepository filmRepository;
+
+    @Autowired
+    private FilmSpecification filmSpecification;
 
     public FilmDTO save(FilmDTO dto) {
         FilmEntity entity = filmMapper.filmDTO2Entity(dto, true);
@@ -55,6 +61,13 @@ public class FilmServiceImpl implements FilmService {
             entity.setDeleted(true);
             filmRepository.save(entity);
         }
+    }
+
+    public List<FilmDTO> getByFilters(String name, String genre, String creationDate, String order) {
+        FilmFiltersDTO filtersDTO = new FilmFiltersDTO(name, genre, creationDate, order);
+        List<FilmEntity> entities = filmRepository.findAll(filmSpecification.getByFilters(filtersDTO));
+        List<FilmDTO> dtos = filmMapper.filmEntityFilterList2DTOList(entities);
+        return dtos;
     }
 
     public List<FilmDTO> getAllFilms() {
