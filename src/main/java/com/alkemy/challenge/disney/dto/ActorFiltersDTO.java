@@ -11,14 +11,14 @@ public class ActorFiltersDTO {
     private String name;
     private String age;
     private String weight;
-    private Set<Long> films;
+    private Set<Long> movies;
     private String order;
 
-    public ActorFiltersDTO(String name, String age, String weight, Set<Long> films, String order) {
+    public ActorFiltersDTO(String name, String age, String weight, Set<Long> movies, String order) {
         this.name = name;
         this.age = age;
         this.weight = weight;
-        this.films = films;
+        this.movies = movies;
         this.order = order;
     }
 

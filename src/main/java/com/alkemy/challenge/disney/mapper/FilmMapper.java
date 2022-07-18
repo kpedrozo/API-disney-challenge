@@ -1,6 +1,5 @@
 package com.alkemy.challenge.disney.mapper;
 
-import com.alkemy.challenge.disney.dto.FilmBasicDTO;
 import com.alkemy.challenge.disney.dto.FilmDTO;
 import com.alkemy.challenge.disney.entity.ActorEntity;
 import com.alkemy.challenge.disney.entity.FilmEntity;
@@ -82,13 +81,22 @@ public class FilmMapper {
         return dtos;
     }
 
-    public FilmEntity filmBasicDTO2Entity(FilmBasicDTO dto, FilmEntity entity) {
-        entity.setTitle(dto.getTitle());
-        entity.setQualification(dto.getQualification());
-        entity.setDeleted(dto.isDeleted());
-        entity.setGenreID(dto.getGenreID());
+
+    public FilmEntity entityUpdate(FilmDTO film, FilmEntity entity, boolean loadActors) {
+        if (film.getImage() != null) { entity.setImage(film.getImage()); }
+        if (film.getTitle() != null) { entity.setTitle(film.getTitle()); }
+        if (film.getCreationDate() != null) { entity.setCreationDate(film.getCreationDate()); }
+        if (film.getQualification() != null) { entity.setQualification(film.getQualification()); }
+        if (film.getGenreID() != null) { entity.setGenreID(film.getGenreID()); }
+        if (film.isDeleted() != false) { entity.setDeleted(film.isDeleted()); }
+        if (loadActors & (film.getActors() != null)) {
+            List<ActorEntity> actorsEntity = this.actorMapper.actorsDTOList2Entity(film.getActors(),false);
+            entity.setActors(actorsEntity.stream().collect(Collectors.toSet()));
+        }
         return entity;
+
     }
+
 
     public List<FilmDTO> filmEntityFilterList2DTOList(List<FilmEntity> entities) {
         List<FilmDTO> dtos = new ArrayList<>();

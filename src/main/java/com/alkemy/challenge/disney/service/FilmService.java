@@ -1,6 +1,5 @@
 package com.alkemy.challenge.disney.service;
 
-import com.alkemy.challenge.disney.dto.FilmBasicDTO;
 import com.alkemy.challenge.disney.dto.FilmDTO;
 
 import java.util.List;
@@ -13,7 +12,7 @@ public interface FilmService {
 
     FilmDTO getDetailsById(Long id);
 
-    FilmDTO update(FilmBasicDTO film, Long id);
+    FilmDTO update(FilmDTO film, Long id);
 
     void delete(Long id);
 

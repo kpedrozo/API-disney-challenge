@@ -1,6 +1,5 @@
 package com.alkemy.challenge.disney.controller;
 
-import com.alkemy.challenge.disney.dto.FilmBasicDTO;
 import com.alkemy.challenge.disney.dto.FilmDTO;
 import com.alkemy.challenge.disney.service.FilmService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +35,7 @@ public class FilmController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<FilmDTO> update(@RequestBody FilmBasicDTO film, @PathVariable ("id") Long id) {
+    public ResponseEntity<FilmDTO> update(@RequestBody FilmDTO film, @PathVariable ("id") Long id) {
         FilmDTO filmUpdated = filmService.update(film, id);
         return ResponseEntity.ok(filmUpdated);
     }

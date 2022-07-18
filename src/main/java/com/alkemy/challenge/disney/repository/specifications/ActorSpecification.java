@@ -47,10 +47,10 @@ public class ActorSpecification {
                 );
             }
 
-            if (!CollectionUtils.isEmpty(filtersDTO.getFilms())) {
-                Join<FilmEntity, ActorEntity> join = root.join("movies", JoinType.INNER);
+            if (!CollectionUtils.isEmpty(filtersDTO.getMovies())) {
+                Join<FilmEntity, ActorEntity> join = root.join("films", JoinType.INNER);
                 Expression<String> filmsId = join.get("id");
-                predicates.add(filmsId.in(filtersDTO.getFilms()));
+                predicates.add(filmsId.in(filtersDTO.getMovies()));
             }
 
             // remove duplicates

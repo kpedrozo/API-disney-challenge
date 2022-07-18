@@ -1,10 +1,8 @@
 package com.alkemy.challenge.disney.mapper;
 
-import com.alkemy.challenge.disney.dto.ActorBasicDTO;
 import com.alkemy.challenge.disney.dto.ActorDTO;
 import com.alkemy.challenge.disney.entity.ActorEntity;
 import com.alkemy.challenge.disney.entity.FilmEntity;
-import com.alkemy.challenge.disney.service.ActorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -75,13 +73,6 @@ public class ActorMapper {
     }
 
 
-    public ActorEntity actorBasicDTO2Entity(ActorBasicDTO dto, ActorEntity entity) {
-        entity.setName(dto.getName());
-        entity.setAge(dto.getAge());
-        entity.setWeight(dto.getWeight());
-        return entity;
-    }
-
     public List<ActorDTO> actorEntityFilterList2DTOList(List<ActorEntity> entities) {
         List<ActorDTO> dtos = new ArrayList<>();
         for (ActorEntity entity : entities) {
@@ -98,6 +89,21 @@ public class ActorMapper {
         actorDTO.setImage(entity.getImage());
         actorDTO.setName(entity.getName());
         return actorDTO;
+    }
+
+    public ActorEntity entityUpdate(ActorDTO actor, ActorEntity entity, boolean loadFilms) {
+        if (actor.getImage() != null) { entity.setImage(actor.getImage()); }
+        if (actor.getName() != null) { entity.setName(actor.getName()); }
+        if (actor.getAge() != null) { entity.setAge(actor.getAge()); }
+        if (actor.getWeight() != null) { entity.setWeight(actor.getWeight()); }
+        if (actor.getStory() != null) { entity.setStory(actor.getStory()); }
+        if (actor.isDeleted() != false) { entity.setDeleted(actor.isDeleted()); }
+        if (loadFilms & (actor.getFilms() != null)) {
+            List<FilmEntity> filmsEntity = this.filmMapper.filmDTOList2Entity(actor.getFilms(), false);
+            entity.setFilms(filmsEntity.stream().collect(Collectors.toSet()));
+        }
+        return entity;
+
     }
 }
 

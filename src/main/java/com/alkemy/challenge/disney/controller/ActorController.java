@@ -1,6 +1,5 @@
 package com.alkemy.challenge.disney.controller;
 
-import com.alkemy.challenge.disney.dto.ActorBasicDTO;
 import com.alkemy.challenge.disney.dto.ActorDTO;
 import com.alkemy.challenge.disney.service.ActorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,9 +40,8 @@ public class ActorController {
     //HACER UPTADE UTILIZANDO PATCH !!! (LA DIFERENCIA CON PUT ES QUE :
     // PATCH permite actualizar algunos valores sin reemplazar el objeto.
     // put reemplaza el objeto.
-
     @PatchMapping("/{id}")
-    public ResponseEntity<ActorDTO> update(@RequestBody ActorBasicDTO actor, @PathVariable ("id") Long id) {
+    public ResponseEntity<ActorDTO> update(@RequestBody ActorDTO actor, @PathVariable ("id") Long id) {
         ActorDTO actorUpdated = actorService.update(actor, id);
         return ResponseEntity.ok(actorUpdated);
     }
@@ -53,10 +51,10 @@ public class ActorController {
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String age,
             @RequestParam(required = false) String weight,
-            @RequestParam(required = false) Set<Long> films,
+            @RequestParam(required = false) Set<Long> movies,
             @RequestParam(required = false, defaultValue = "ASC") String order
     ) {
-        List<ActorDTO> actors = actorService.getByFilters(name, age, weight, films, order);
+        List<ActorDTO> actors = actorService.getByFilters(name, age, weight, movies, order);
         return ResponseEntity.ok(actors);
     }
 
