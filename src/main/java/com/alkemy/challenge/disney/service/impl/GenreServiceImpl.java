@@ -2,6 +2,8 @@ package com.alkemy.challenge.disney.service.impl;
 
 import com.alkemy.challenge.disney.dto.GenreDTO;
 import com.alkemy.challenge.disney.entity.GenreEntity;
+import com.alkemy.challenge.disney.exception.ErrorEnum;
+import com.alkemy.challenge.disney.exception.ParamNotFound;
 import com.alkemy.challenge.disney.mapper.GenreMapper;
 import com.alkemy.challenge.disney.repository.GenreRepository;
 import com.alkemy.challenge.disney.service.GenreService;
@@ -28,8 +30,11 @@ public class GenreServiceImpl implements GenreService {
     }
 
     public GenreDTO getById(Long id) {
-        Optional<GenreEntity> oPentity = genreRepository.findById(id);
-        GenreEntity entity = oPentity.get();
+        boolean exists = genreRepository.existsById(id);
+        if (!exists) {
+            throw new ParamNotFound(ErrorEnum.IDGENRENOTVALID.getMessage());
+        }
+        GenreEntity entity = genreRepository.getReferenceById(id);
         GenreDTO result = genreMapper.genreEntity2DTO(entity);
         return result;
     }

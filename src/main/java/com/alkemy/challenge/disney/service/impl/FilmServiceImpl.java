@@ -4,6 +4,7 @@ import com.alkemy.challenge.disney.dto.FilmDTO;
 import com.alkemy.challenge.disney.dto.FilmFiltersDTO;
 import com.alkemy.challenge.disney.entity.ActorEntity;
 import com.alkemy.challenge.disney.entity.FilmEntity;
+import com.alkemy.challenge.disney.exception.ErrorEnum;
 import com.alkemy.challenge.disney.exception.ParamNotFound;
 import com.alkemy.challenge.disney.mapper.FilmMapper;
 import com.alkemy.challenge.disney.repository.ActorRepository;
@@ -40,7 +41,7 @@ public class FilmServiceImpl implements FilmService {
     public FilmDTO getDetailsById(Long id) {
         Boolean exists = filmRepository.existsById(id);
         if (!exists) {
-            throw new ParamNotFound("ID Film no valido");
+            throw new ParamNotFound(ErrorEnum.IDFILMNOTVALID.getMessage());
         }
         FilmEntity entity = filmRepository.getReferenceById(id);
         FilmDTO dto = filmMapper.filmEntity2DTO(entity, true);
@@ -50,10 +51,10 @@ public class FilmServiceImpl implements FilmService {
     public FilmDTO update(FilmDTO film, Long id) {
         Boolean exists = filmRepository.existsById(id);
         if (!exists) {
-            throw new ParamNotFound("ID Film no valido");
+            throw new ParamNotFound(ErrorEnum.IDFILMNOTVALID.getMessage());
         }
             FilmEntity entity = filmRepository.getReferenceById(id);
-            filmMapper.entityUpdate(film, entity, true);
+            filmMapper.entityUpdate(film, entity, false);
             FilmEntity entityUpdated = filmRepository.save(entity);
             FilmDTO result = filmMapper.filmEntity2DTO(entityUpdated, true);
             return result;
@@ -62,11 +63,9 @@ public class FilmServiceImpl implements FilmService {
     public void delete(Long id) {
         Boolean exists = filmRepository.existsById(id);
         if (!exists) {
-            throw new ParamNotFound("ID Film no valido");
+            throw new ParamNotFound(ErrorEnum.IDFILMNOTVALID.getMessage());
         }
-            FilmEntity entity = filmRepository.getReferenceById(id);
-            entity.setDeleted(true);
-            filmRepository.save(entity);
+        filmRepository.deleteById(id);
     }
 
     public List<FilmDTO> getByFilters(String name, String genre, String creationDate, String order) {
@@ -80,11 +79,11 @@ public class FilmServiceImpl implements FilmService {
     public FilmDTO addActor(Long idFilm, Long idActor) {
         Boolean exists = filmRepository.existsById(idFilm);
         if (!exists) {
-            throw new ParamNotFound("ID Film no valido");
+            throw new ParamNotFound(ErrorEnum.IDFILMNOTVALID.getMessage());
         }
         Boolean existsActor = actorRepository.existsById(idActor);
         if (!existsActor) {
-            throw new ParamNotFound("ID Actor no valido");
+            throw new ParamNotFound(ErrorEnum.IDACTORNOTVALID.getMessage());
         }
         FilmEntity entity = filmRepository.getReferenceById(idFilm);
         ActorEntity actor = actorRepository.getReferenceById(idActor);
@@ -96,11 +95,11 @@ public class FilmServiceImpl implements FilmService {
 
     public FilmDTO deleteActor(Long idFilm, Long idActor) {Boolean exists = filmRepository.existsById(idFilm);
         if (!exists) {
-            throw new ParamNotFound("ID Film no valido");
+            throw new ParamNotFound(ErrorEnum.IDFILMNOTVALID.getMessage());
         }
             Boolean existsActor = actorRepository.existsById(idActor);
         if (!existsActor) {
-            throw new ParamNotFound("ID Actor no valido");
+            throw new ParamNotFound(ErrorEnum.IDACTORNOTVALID.getMessage());
         }
             FilmEntity entity = filmRepository.getReferenceById(idFilm);
             ActorEntity actor = actorRepository.getReferenceById(idActor);

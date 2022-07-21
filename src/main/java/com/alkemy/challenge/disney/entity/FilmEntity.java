@@ -4,6 +4,8 @@ package com.alkemy.challenge.disney.entity;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -16,6 +18,8 @@ import java.util.Set;
 @Table(name = "films")
 @Getter
 @Setter
+@SQLDelete(sql = "UPDATE films SET deleted = true WHERE id=?")
+@Where(clause = "deleted = false")
 
 public class FilmEntity {
 
@@ -31,7 +35,7 @@ public class FilmEntity {
     private boolean deleted = Boolean.FALSE;
 
     @ManyToOne(fetch = FetchType.EAGER
-            , cascade = { CascadeType.PERSIST, CascadeType.MERGE }
+            , targetEntity = GenreEntity.class
     )
     @JoinColumn(name = "genre_id", insertable = false, updatable = false)
     private GenreEntity genre;

@@ -20,7 +20,7 @@ public class GenreEntity {
     private String name;
     private String image;
 
-    @OneToMany(mappedBy = "genre")
+    @OneToMany(mappedBy = "genreID")
     private Set<FilmEntity> films = new HashSet<>();
 
 }

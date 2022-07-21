@@ -29,14 +29,20 @@ public class FilmMapper {
         filmEntity.setCreationDate(dto.getCreationDate());
         filmEntity.setQualification(dto.getQualification());
         filmEntity.setDeleted(dto.isDeleted());
-        filmEntity.setGenre(this.genreMapper.genreDTO2Entity(genreService.getById(dto.getGenreID())));
-
         filmEntity.setGenreID(dto.getGenreID());
         if (loadActors) {
             List<ActorEntity> actorsEntity = this.actorMapper.actorsDTOList2Entity(dto.getActors(),false);
             filmEntity.setActors(actorsEntity.stream().collect(Collectors.toSet()));
         }
         return filmEntity;
+    }
+
+
+    private void basicEntity2DTO(FilmEntity entity, FilmDTO dto) {
+        dto.setId(entity.getId());
+        dto.setImage(entity.getImage());
+        dto.setTitle(entity.getTitle());
+        dto.setCreationDate(entity.getCreationDate());
     }
 
     public List<FilmEntity> filmDTOList2Entity(List<FilmDTO> dtos, boolean loadActors) {
@@ -52,16 +58,11 @@ public class FilmMapper {
 
     public FilmDTO filmEntity2DTO (FilmEntity entity, boolean loadActors) {
         FilmDTO filmDTO = new FilmDTO();
-        filmDTO.setId(entity.getId());
-        filmDTO.setImage(entity.getImage());
-        filmDTO.setTitle(entity.getTitle());
-        filmDTO.setCreationDate(entity.getCreationDate());
+        basicEntity2DTO(entity, filmDTO);
+
         filmDTO.setQualification(entity.getQualification());
         filmDTO.setDeleted(entity.isDeleted());
-        filmDTO.setGenre(this.genreMapper.genreEntity2DTO(entity.getGenre()));
         filmDTO.setGenreID(entity.getGenreID());
-
-        // Al tener un parametro loadActors en FALSE, no re cargamos los actores, cuando desde actores pedimos las peliculas.
         if (loadActors) {
             Set<ActorEntity> actors = entity.getActors();
             List<ActorEntity> actorEntities = new ArrayList<>(actors);
@@ -89,10 +90,6 @@ public class FilmMapper {
         if (film.getQualification() != null) { entity.setQualification(film.getQualification()); }
         if (film.getGenreID() != null) { entity.setGenreID(film.getGenreID()); }
         if (film.isDeleted() != false) { entity.setDeleted(film.isDeleted()); }
-        if (loadActors & (film.getActors() != null)) {
-            List<ActorEntity> actorsEntity = this.actorMapper.actorsDTOList2Entity(film.getActors(),false);
-            entity.setActors(actorsEntity.stream().collect(Collectors.toSet()));
-        }
         return entity;
 
     }
@@ -110,10 +107,7 @@ public class FilmMapper {
 
     private FilmDTO filmEntityFilter2DTO(FilmEntity entity) {
         FilmDTO filmDTO = new FilmDTO();
-        filmDTO.setId(entity.getId());
-        filmDTO.setImage(entity.getImage());
-        filmDTO.setTitle(entity.getTitle());
-        filmDTO.setCreationDate(entity.getCreationDate());
+        basicEntity2DTO(entity, filmDTO);
         return filmDTO;
     }
 

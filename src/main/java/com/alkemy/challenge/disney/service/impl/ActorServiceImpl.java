@@ -3,6 +3,7 @@ package com.alkemy.challenge.disney.service.impl;
 import com.alkemy.challenge.disney.dto.ActorDTO;
 import com.alkemy.challenge.disney.dto.ActorFiltersDTO;
 import com.alkemy.challenge.disney.entity.ActorEntity;
+import com.alkemy.challenge.disney.exception.ErrorEnum;
 import com.alkemy.challenge.disney.exception.ParamNotFound;
 import com.alkemy.challenge.disney.mapper.ActorMapper;
 import com.alkemy.challenge.disney.repository.ActorRepository;
@@ -30,7 +31,7 @@ public class ActorServiceImpl implements ActorService {
     private ActorSpecification actorSpecification;
 
     public ActorDTO save(ActorDTO dto) {
-        ActorEntity entity = actorMapper.actorDTO2Entity(dto, true);
+        ActorEntity entity = actorMapper.actorDTO2Entity(dto, false);
         ActorEntity entitySaved = actorRepository.save(entity);
         ActorDTO result = actorMapper.actorEntity2DTO(entitySaved, true);
         return result;
@@ -39,7 +40,7 @@ public class ActorServiceImpl implements ActorService {
     public ActorDTO update(ActorDTO actor, Long id) {
         Boolean exists = actorRepository.existsById(id);
         if (!exists) {
-            throw new ParamNotFound("ID actor no valido");
+            throw new ParamNotFound(ErrorEnum.IDACTORNOTVALID.getMessage());
         }
             ActorEntity entity = actorRepository.getReferenceById(id);
             actorMapper.entityUpdate(actor, entity, true);
@@ -65,17 +66,15 @@ public class ActorServiceImpl implements ActorService {
     public void delete(Long id) {
         Boolean exists = actorRepository.existsById(id);
         if (!exists) {
-            throw new ParamNotFound("ID actor no valido");
+            throw new ParamNotFound(ErrorEnum.IDACTORNOTVALID.getMessage());
         }
-            ActorEntity actorEntity = actorRepository.getReferenceById(id);
-            actorEntity.setDeleted(true);
-            actorRepository.save(actorEntity);
+        actorRepository.deleteById(id);
     }
 
     public ActorDTO getDetailsByID(Long id) {
         Boolean exists = actorRepository.existsById(id);
         if (!exists) {
-            throw new ParamNotFound("ID actor no valido");
+            throw new ParamNotFound(ErrorEnum.IDACTORNOTVALID.getMessage());
         }
         ActorEntity entity = actorRepository.getReferenceById(id);
         ActorDTO dto = actorMapper.actorEntity2DTO(entity, true);

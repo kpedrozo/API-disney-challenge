@@ -12,17 +12,12 @@ import java.util.Set;
 
 
 @RestController
-@RequestMapping("actors")
+@RequestMapping("characters")
 public class ActorController {
 
     @Autowired
     private ActorService actorService;
 
-    @GetMapping
-    public ResponseEntity<List<ActorDTO>> getAll() {
-        List<ActorDTO> actors = actorService.getAllActors();
-        return ResponseEntity.ok().body(actors);
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<ActorDTO> getDetailsByID(@PathVariable Long id) {
@@ -37,16 +32,13 @@ public class ActorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(actorCreated);
     }
 
-    //HACER UPTADE UTILIZANDO PATCH !!! (LA DIFERENCIA CON PUT ES QUE :
-    // PATCH permite actualizar algunos valores sin reemplazar el objeto.
-    // put reemplaza el objeto.
     @PatchMapping("/{id}")
     public ResponseEntity<ActorDTO> update(@RequestBody ActorDTO actor, @PathVariable ("id") Long id) {
         ActorDTO actorUpdated = actorService.update(actor, id);
         return ResponseEntity.ok(actorUpdated);
     }
 
-    @GetMapping("/characters")
+    @GetMapping()
     public ResponseEntity<List<ActorDTO>> getDetailsByFilters (
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String age,
@@ -57,7 +49,6 @@ public class ActorController {
         List<ActorDTO> actors = actorService.getByFilters(name, age, weight, movies, order);
         return ResponseEntity.ok(actors);
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {

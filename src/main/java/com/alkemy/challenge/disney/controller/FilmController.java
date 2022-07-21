@@ -10,17 +10,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("films")
+@RequestMapping("movies")
 public class FilmController {
 
     @Autowired
     private FilmService filmService;
 
-    @GetMapping
-    public ResponseEntity<List<FilmDTO>> getAll() {
-        List<FilmDTO> films = filmService.getAllFilms();
-        return ResponseEntity.ok().body(films);
-    }
 
     @PostMapping
     public ResponseEntity<FilmDTO> save(@RequestBody FilmDTO film) {
@@ -46,8 +41,7 @@ public class FilmController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-
-    @GetMapping("/movies")
+    @GetMapping()
     public ResponseEntity<List<FilmDTO>> getDetailsByFilters (
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String genre,
@@ -58,7 +52,7 @@ public class FilmController {
         return ResponseEntity.ok(films);
     }
 
-    @PostMapping("/movies/{idMovie}/characters/{idCharacter}")
+    @PostMapping("/{idMovie}/characters/{idCharacter}")
     public ResponseEntity<FilmDTO> addActor (
             @PathVariable ("idMovie") Long idFilm,
             @PathVariable ("idCharacter") Long idActor) {
@@ -66,7 +60,7 @@ public class FilmController {
         return ResponseEntity.ok(film);
     }
 
-    @DeleteMapping("/movies/{idMovie}/characters/{idCharacter}")
+    @DeleteMapping("/{idMovie}/characters/{idCharacter}")
     public ResponseEntity<FilmDTO> deleteActor (
             @PathVariable ("idMovie") Long idFilm,
             @PathVariable ("idCharacter") Long idActor) {
