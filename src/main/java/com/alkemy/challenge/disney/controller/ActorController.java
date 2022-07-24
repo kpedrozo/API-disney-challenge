@@ -1,5 +1,6 @@
 package com.alkemy.challenge.disney.controller;
 
+import com.alkemy.challenge.disney.dto.ActorBasicDTO;
 import com.alkemy.challenge.disney.dto.ActorDTO;
 import com.alkemy.challenge.disney.service.ActorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 
@@ -27,7 +29,7 @@ public class ActorController {
 
 
     @PostMapping
-    public ResponseEntity<ActorDTO> save(@RequestBody ActorDTO actor) {
+    public ResponseEntity<ActorDTO> save(@Valid @RequestBody ActorDTO actor) {
         ActorDTO actorCreated = actorService.save(actor);
         return ResponseEntity.status(HttpStatus.CREATED).body(actorCreated);
     }
@@ -39,16 +41,17 @@ public class ActorController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<ActorDTO>> getDetailsByFilters (
+    public ResponseEntity<List<ActorBasicDTO>> getDetailsByFilters (
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String age,
             @RequestParam(required = false) String weight,
             @RequestParam(required = false) Set<Long> movies,
             @RequestParam(required = false, defaultValue = "ASC") String order
     ) {
-        List<ActorDTO> actors = actorService.getByFilters(name, age, weight, movies, order);
+        List<ActorBasicDTO> actors = actorService.getByFilters(name, age, weight, movies, order);
         return ResponseEntity.ok(actors);
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {

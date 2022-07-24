@@ -30,7 +30,7 @@ public class FilmEntity {
     private String title;
     @Column(name = "created_date")
     @DateTimeFormat(pattern = "yyyy/MM/dd")
-    private LocalDate creationDate;
+    private String creationDate;
     private Integer qualification;
     private boolean deleted = Boolean.FALSE;
 

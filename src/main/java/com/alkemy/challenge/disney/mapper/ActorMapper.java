@@ -1,5 +1,6 @@
 package com.alkemy.challenge.disney.mapper;
 
+import com.alkemy.challenge.disney.dto.ActorBasicDTO;
 import com.alkemy.challenge.disney.dto.ActorDTO;
 import com.alkemy.challenge.disney.entity.ActorEntity;
 import com.alkemy.challenge.disney.entity.FilmEntity;
@@ -41,7 +42,6 @@ public class ActorMapper {
     public ActorDTO actorEntity2DTO(ActorEntity entity, boolean loadFilms) {
         ActorDTO actorDTO = new ActorDTO();
         basicEntity2DTO(entity, actorDTO);
-
         actorDTO.setAge(entity.getAge());
         actorDTO.setWeight(entity.getWeight());
         actorDTO.setStory(entity.getStory());
@@ -66,8 +66,8 @@ public class ActorMapper {
     }
 
 
-    public List<ActorDTO> actorEntityFilterList2DTOList(List<ActorEntity> entities) {
-        List<ActorDTO> dtos = new ArrayList<>();
+    public List<ActorBasicDTO> actorEntityFilterList2DTOList(List<ActorEntity> entities) {
+        List<ActorBasicDTO> dtos = new ArrayList<>();
         for (ActorEntity entity : entities) {
             if (!entity.isDeleted()) {
                 dtos.add(this.actorEntityFilter2DTO(entity));
@@ -77,11 +77,13 @@ public class ActorMapper {
     }
 
 
-    private ActorDTO actorEntityFilter2DTO(ActorEntity entity) {
-        ActorDTO actorDTO = new ActorDTO();
-        basicEntity2DTO(entity, actorDTO);
+    public ActorBasicDTO actorEntityFilter2DTO(ActorEntity entity) {
+        ActorBasicDTO actorDTO = new ActorBasicDTO();
+        actorDTO.setImage(entity.getImage());
+        actorDTO.setName(entity.getName());
         return actorDTO;
     }
+
 
     private void basicEntity2DTO(ActorEntity entity, ActorDTO actorDTO) {
         actorDTO.setId(entity.getId());
@@ -99,5 +101,7 @@ public class ActorMapper {
         return entity;
 
     }
+
+
 }
 

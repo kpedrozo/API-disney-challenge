@@ -4,19 +4,22 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @Getter
 @Setter
-public class ActorDTO {
-    private Long id;
+public class ActorBasicDTO {
+
     private String image;
     @NotNull
     private String name;
-    private Long age;
-    private Long weight;
-    private String story;
-    private boolean deleted;
-    private List<FilmDTO> films;
+
+    public ActorBasicDTO(String image, String name) {
+        this.image = image;
+        this.name = name;
+    }
+
+    public ActorBasicDTO() {
+
+    }
 
 }

@@ -3,16 +3,20 @@ package com.alkemy.challenge.disney.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Getter
 @Setter
 public class ActorFiltersDTO {
+
+    @NotNull
     private String name;
     private String age;
     private String weight;
     private Set<Long> movies;
     private String order;
+
 
     public ActorFiltersDTO(String name, String age, String weight, Set<Long> movies, String order) {
         this.name = name;
@@ -22,6 +26,7 @@ public class ActorFiltersDTO {
         this.order = order;
     }
 
+
     public boolean isASC() {
         return order.compareToIgnoreCase("ASC") == 0;
     }
@@ -29,4 +34,6 @@ public class ActorFiltersDTO {
     public boolean idDESC() {
         return order.compareToIgnoreCase("DESC") == 0;
     }
+
+
 }

@@ -1,5 +1,6 @@
 package com.alkemy.challenge.disney.service.impl;
 
+import com.alkemy.challenge.disney.dto.FilmBasicDTO;
 import com.alkemy.challenge.disney.dto.FilmDTO;
 import com.alkemy.challenge.disney.dto.FilmFiltersDTO;
 import com.alkemy.challenge.disney.entity.ActorEntity;
@@ -38,6 +39,18 @@ public class FilmServiceImpl implements FilmService {
         return result;
     }
 
+    public FilmDTO update(FilmDTO film, Long id) {
+        Boolean exists = filmRepository.existsById(id);
+        if (!exists) {
+            throw new ParamNotFound(ErrorEnum.IDFILMNOTVALID.getMessage());
+        }
+        FilmEntity entity = filmRepository.getReferenceById(id);
+        filmMapper.entityUpdate(film, entity, false);
+        FilmEntity entityUpdated = filmRepository.save(entity);
+        FilmDTO result = filmMapper.filmEntity2DTO(entityUpdated, true);
+        return result;
+    }
+
     public FilmDTO getDetailsById(Long id) {
         Boolean exists = filmRepository.existsById(id);
         if (!exists) {
@@ -48,18 +61,6 @@ public class FilmServiceImpl implements FilmService {
         return dto;
     }
 
-    public FilmDTO update(FilmDTO film, Long id) {
-        Boolean exists = filmRepository.existsById(id);
-        if (!exists) {
-            throw new ParamNotFound(ErrorEnum.IDFILMNOTVALID.getMessage());
-        }
-            FilmEntity entity = filmRepository.getReferenceById(id);
-            filmMapper.entityUpdate(film, entity, false);
-            FilmEntity entityUpdated = filmRepository.save(entity);
-            FilmDTO result = filmMapper.filmEntity2DTO(entityUpdated, true);
-            return result;
-    }
-
     public void delete(Long id) {
         Boolean exists = filmRepository.existsById(id);
         if (!exists) {
@@ -68,13 +69,12 @@ public class FilmServiceImpl implements FilmService {
         filmRepository.deleteById(id);
     }
 
-    public List<FilmDTO> getByFilters(String name, String genre, String creationDate, String order) {
+    public List<FilmBasicDTO> getByFilters(String name, String genre, String creationDate, String order) {
         FilmFiltersDTO filtersDTO = new FilmFiltersDTO(name, genre, creationDate, order);
         List<FilmEntity> entities = filmRepository.findAll(filmSpecification.getByFilters(filtersDTO));
-        List<FilmDTO> dtos = filmMapper.filmEntityFilterList2DTOList(entities);
+        List<FilmBasicDTO> dtos = filmMapper.filmEntityFilterList2DTOList(entities);
         return dtos;
     }
-
 
     public FilmDTO addActor(Long idFilm, Long idActor) {
         Boolean exists = filmRepository.existsById(idFilm);
@@ -107,12 +107,6 @@ public class FilmServiceImpl implements FilmService {
             FilmEntity entitySaved = filmRepository.save(entity);
             FilmDTO result = filmMapper.filmEntity2DTO(entitySaved, true);
             return result;
-    }
-
-    public List<FilmDTO> getAllFilms() {
-        List<FilmEntity> entities = filmRepository.findAll();
-        List<FilmDTO> result = filmMapper.filmEntityList2DTOList(entities, true);
-        return result;
     }
 
 

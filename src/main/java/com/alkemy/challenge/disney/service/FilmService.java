@@ -1,13 +1,12 @@
 package com.alkemy.challenge.disney.service;
 
+import com.alkemy.challenge.disney.dto.FilmBasicDTO;
 import com.alkemy.challenge.disney.dto.FilmDTO;
 
 import java.util.List;
 
 public interface FilmService {
     
-    List<FilmDTO> getAllFilms();
-
     FilmDTO save(FilmDTO film);
 
     FilmDTO getDetailsById(Long id);
@@ -16,7 +15,7 @@ public interface FilmService {
 
     void delete(Long id);
 
-    List<FilmDTO> getByFilters(String name, String genre, String creationDate, String order);
+    List<FilmBasicDTO> getByFilters(String name, String genre, String creationDate, String order);
 
     FilmDTO addActor(Long idFilm, Long idActor);
 

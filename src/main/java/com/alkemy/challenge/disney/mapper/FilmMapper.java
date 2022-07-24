@@ -1,8 +1,12 @@
 package com.alkemy.challenge.disney.mapper;
 
+import com.alkemy.challenge.disney.dto.FilmBasicDTO;
 import com.alkemy.challenge.disney.dto.FilmDTO;
+import com.alkemy.challenge.disney.dto.GenreDTO;
 import com.alkemy.challenge.disney.entity.ActorEntity;
 import com.alkemy.challenge.disney.entity.FilmEntity;
+import com.alkemy.challenge.disney.entity.GenreEntity;
+import com.alkemy.challenge.disney.repository.GenreRepository;
 import com.alkemy.challenge.disney.service.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,6 +25,8 @@ public class FilmMapper {
     private ActorMapper actorMapper;
     @Autowired
     private GenreService genreService;
+    @Autowired
+    private GenreRepository genreRepository;
 
     public FilmEntity filmDTO2Entity(FilmDTO dto, boolean loadActors) {
         FilmEntity filmEntity = new FilmEntity();
@@ -29,12 +35,28 @@ public class FilmMapper {
         filmEntity.setCreationDate(dto.getCreationDate());
         filmEntity.setQualification(dto.getQualification());
         filmEntity.setDeleted(dto.isDeleted());
+        GenreEntity genre = genreForMovie(dto.getGenreID());
+        filmEntity.setGenre(genre);
         filmEntity.setGenreID(dto.getGenreID());
         if (loadActors) {
             List<ActorEntity> actorsEntity = this.actorMapper.actorsDTOList2Entity(dto.getActors(),false);
             filmEntity.setActors(actorsEntity.stream().collect(Collectors.toSet()));
         }
         return filmEntity;
+    }
+
+    private GenreEntity genreForMovie(Long genreID) {
+        GenreEntity genre = genreRepository.getReferenceById(genreID);
+        genre.setId(genreID);
+        genre.setName(genre.getName());
+        genre.setImage(genre.getImage());
+        return genre;
+    }
+
+    private GenreDTO genreForMovieDTO (Long genreID) {
+        GenreEntity genreEntity = genreForMovie(genreID);
+        GenreDTO genre = genreMapper.genreEntity2DTO(genreEntity);
+        return genre;
     }
 
 
@@ -45,23 +67,14 @@ public class FilmMapper {
         dto.setCreationDate(entity.getCreationDate());
     }
 
-    public List<FilmEntity> filmDTOList2Entity(List<FilmDTO> dtos, boolean loadActors) {
-        List <FilmEntity> entities = new ArrayList<>();
-        for (FilmDTO dto : dtos) {
-            if (!dto.isDeleted()) {
-                entities.add(this.filmDTO2Entity(dto, loadActors));
-            }
-        }
-        return entities;
-    }
-
 
     public FilmDTO filmEntity2DTO (FilmEntity entity, boolean loadActors) {
         FilmDTO filmDTO = new FilmDTO();
         basicEntity2DTO(entity, filmDTO);
-
         filmDTO.setQualification(entity.getQualification());
         filmDTO.setDeleted(entity.isDeleted());
+        GenreDTO genre = genreForMovieDTO(entity.getGenreID());
+        filmDTO.setGenre(genre);
         filmDTO.setGenreID(entity.getGenreID());
         if (loadActors) {
             Set<ActorEntity> actors = entity.getActors();
@@ -95,8 +108,8 @@ public class FilmMapper {
     }
 
 
-    public List<FilmDTO> filmEntityFilterList2DTOList(List<FilmEntity> entities) {
-        List<FilmDTO> dtos = new ArrayList<>();
+    public List<FilmBasicDTO> filmEntityFilterList2DTOList(List<FilmEntity> entities) {
+        List<FilmBasicDTO> dtos = new ArrayList<>();
         for (FilmEntity entity : entities) {
             if (!entity.isDeleted()) {
                 dtos.add(this.filmEntityFilter2DTO(entity));
@@ -105,9 +118,11 @@ public class FilmMapper {
         return dtos;
     }
 
-    private FilmDTO filmEntityFilter2DTO(FilmEntity entity) {
-        FilmDTO filmDTO = new FilmDTO();
-        basicEntity2DTO(entity, filmDTO);
+    private FilmBasicDTO filmEntityFilter2DTO(FilmEntity entity) {
+        FilmBasicDTO filmDTO = new FilmBasicDTO();
+        filmDTO.setImage(entity.getImage());
+        filmDTO.setTitle(entity.getTitle());
+        filmDTO.setCreationDate(entity.getCreationDate().toString());
         return filmDTO;
     }
 

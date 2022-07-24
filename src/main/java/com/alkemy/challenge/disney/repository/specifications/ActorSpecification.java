@@ -13,7 +13,6 @@ import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +31,7 @@ public class ActorSpecification {
                         )
                 );
             }
+
 
             if (StringUtils.hasLength(filtersDTO.getAge())) {
                 String age = filtersDTO.getAge();
