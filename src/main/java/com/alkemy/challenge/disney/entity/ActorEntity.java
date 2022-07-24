@@ -15,7 +15,7 @@ import java.util.Set;
 @Getter
 @Setter
 @SQLDelete(sql = "UPDATE actors SET deleted = true WHERE id=?")
-@Where(clause = "deleted=false")
+@Where(clause = "deleted = false")
 
 public class ActorEntity {
 
@@ -34,6 +34,26 @@ public class ActorEntity {
     private Set<FilmEntity> films = new HashSet<>();
 
     // ADD and REMOVE filmaciones
+
+
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof ActorEntity)) {
+            return false;
+        }
+        else {
+            ActorEntity actor = (ActorEntity) obj;
+            if (this.getId() != null) {
+                return this.getId().equals(actor.getId());
+            }
+            else {
+                return false;
+            }
+        }
+    }
+
     public void addFilms(FilmEntity film){
         this.films.add(film);
         film.getActors().add(this);
@@ -43,6 +63,7 @@ public class ActorEntity {
         this.films.remove(film);
         film.getActors().remove(this);
     }
+
 
 
 }

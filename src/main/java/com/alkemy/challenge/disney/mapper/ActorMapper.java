@@ -1,5 +1,6 @@
 package com.alkemy.challenge.disney.mapper;
 
+import com.alkemy.challenge.disney.dto.ActorBasicDTO;
 import com.alkemy.challenge.disney.dto.ActorDTO;
 import com.alkemy.challenge.disney.entity.ActorEntity;
 import com.alkemy.challenge.disney.entity.FilmEntity;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 
 @Component
@@ -26,10 +26,6 @@ public class ActorMapper {
         actorEntity.setWeight(dto.getWeight());
         actorEntity.setStory(dto.getStory());
         actorEntity.setDeleted(dto.isDeleted());
-        if (loadFilms & !(dto.getFilms()==null)) {
-            List<FilmEntity> filmsEntity = this.filmMapper.filmDTOList2Entity(dto.getFilms(), false);
-            actorEntity.setFilms(filmsEntity.stream().collect(Collectors.toSet()));
-        }
         return actorEntity;
     }
 
@@ -45,14 +41,11 @@ public class ActorMapper {
 
     public ActorDTO actorEntity2DTO(ActorEntity entity, boolean loadFilms) {
         ActorDTO actorDTO = new ActorDTO();
-        actorDTO.setId(entity.getId());
-        actorDTO.setImage(entity.getImage());
-        actorDTO.setName(entity.getName());
+        basicEntity2DTO(entity, actorDTO);
         actorDTO.setAge(entity.getAge());
         actorDTO.setWeight(entity.getWeight());
         actorDTO.setStory(entity.getStory());
         actorDTO.setDeleted(entity.isDeleted());
-
         if (loadFilms) {
             Set<FilmEntity> films = entity.getFilms();
             List<FilmEntity> filmEntities = new ArrayList<>(films);
@@ -73,8 +66,8 @@ public class ActorMapper {
     }
 
 
-    public List<ActorDTO> actorEntityFilterList2DTOList(List<ActorEntity> entities) {
-        List<ActorDTO> dtos = new ArrayList<>();
+    public List<ActorBasicDTO> actorEntityFilterList2DTOList(List<ActorEntity> entities) {
+        List<ActorBasicDTO> dtos = new ArrayList<>();
         for (ActorEntity entity : entities) {
             if (!entity.isDeleted()) {
                 dtos.add(this.actorEntityFilter2DTO(entity));
@@ -83,12 +76,19 @@ public class ActorMapper {
         return dtos;
     }
 
-    private ActorDTO actorEntityFilter2DTO(ActorEntity entity) {
-        ActorDTO actorDTO = new ActorDTO();
-        actorDTO.setId(entity.getId());
+
+    public ActorBasicDTO actorEntityFilter2DTO(ActorEntity entity) {
+        ActorBasicDTO actorDTO = new ActorBasicDTO();
         actorDTO.setImage(entity.getImage());
         actorDTO.setName(entity.getName());
         return actorDTO;
+    }
+
+
+    private void basicEntity2DTO(ActorEntity entity, ActorDTO actorDTO) {
+        actorDTO.setId(entity.getId());
+        actorDTO.setImage(entity.getImage());
+        actorDTO.setName(entity.getName());
     }
 
     public ActorEntity entityUpdate(ActorDTO actor, ActorEntity entity, boolean loadFilms) {
@@ -98,12 +98,10 @@ public class ActorMapper {
         if (actor.getWeight() != null) { entity.setWeight(actor.getWeight()); }
         if (actor.getStory() != null) { entity.setStory(actor.getStory()); }
         if (actor.isDeleted() != false) { entity.setDeleted(actor.isDeleted()); }
-        if (loadFilms & (actor.getFilms() != null)) {
-            List<FilmEntity> filmsEntity = this.filmMapper.filmDTOList2Entity(actor.getFilms(), false);
-            entity.setFilms(filmsEntity.stream().collect(Collectors.toSet()));
-        }
         return entity;
 
     }
+
+
 }
 

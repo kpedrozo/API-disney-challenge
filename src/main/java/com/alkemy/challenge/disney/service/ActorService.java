@@ -1,13 +1,12 @@
 package com.alkemy.challenge.disney.service;
 
+import com.alkemy.challenge.disney.dto.ActorBasicDTO;
 import com.alkemy.challenge.disney.dto.ActorDTO;
 
 import java.util.List;
 import java.util.Set;
 
 public interface ActorService {
-
-    List<ActorDTO> getAllActors();
 
     ActorDTO save(ActorDTO actor);
 
@@ -17,5 +16,7 @@ public interface ActorService {
 
     ActorDTO update(ActorDTO actor, Long id);
 
-    List<ActorDTO> getByFilters(String name, String age, String weight, Set<Long> movies, String order);
+    List<ActorBasicDTO> getByFilters(String name, String age, String weight, Set<Long> movies, String order);
+
+
 }
