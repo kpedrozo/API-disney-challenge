@@ -1,6 +1,5 @@
 package com.alkemy.challenge.disney.entity;
 
-
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +8,6 @@ import org.hibernate.annotations.Where;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,9 +32,7 @@ public class FilmEntity {
     private Integer qualification;
     private boolean deleted = Boolean.FALSE;
 
-    @ManyToOne(fetch = FetchType.EAGER
-            , targetEntity = GenreEntity.class
-    )
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "genre_id", insertable = false, updatable = false)
     private GenreEntity genre;
 

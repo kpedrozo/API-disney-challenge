@@ -27,34 +27,49 @@ public class EmailServiceImpl implements EmailService {
     @Value("${alkemy.disney.email.enabled}")
     private boolean enabled;
 
+
+    String type = "text/plain";
+    String value = "Bienvenido/a a Alkemy Disney";
+    String subject = "Alkemy Disney";
+
+
+
     public void sendWelcomeEmailTo(String to) {
         if (!enabled) {
             return;
         }
         String apiKey = env.getProperty("EMAIL_API_KEY");
+
+        Content content = new Content(type, value);
+
+        Mail mail = emailData(to, content);
+        SendGrid sg = new SendGrid(apiKey);
+        Request request = requestData(mail, sg);
+
+    }
+
+    private Mail emailData(String to, Content content) {
         Email fromEmail = new Email(emailSender);
         Email toEmail = new Email(to);
-        Content content = new Content(
-                "text/plain",
-                "Bienvenido/a a Alkemy Disney"
-        );
-        String subject = "Alkemy Disney";
 
         Mail mail = new Mail(fromEmail, subject, toEmail, content);
-        SendGrid sg = new SendGrid(apiKey);
+
+        return mail;
+    }
+
+    private Request requestData(Mail mail, SendGrid sg) {
         Request request = new Request();
         try {
             request.setMethod(Method.POST);
             request.setEndpoint("mail/send");
             request.setBody(mail.build());
             Response response = sg.api(request);
-
-            System.out.println(response.getStatusCode());
-            System.out.println(response.getBody());
-            System.out.println(response.getHeaders());
         }
         catch (IOException ex) {
             System.out.println("Error trying to send the email");
         }
+        return request;
     }
+
+
 }
