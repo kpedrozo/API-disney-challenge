@@ -2,6 +2,7 @@ package com.alkemy.challenge.disney.controller;
 
 import com.alkemy.challenge.disney.dto.ApiErrorDTO;
 import com.alkemy.challenge.disney.exception.ParamNotFound;
+import com.alkemy.challenge.disney.exception.UserExists;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,13 +21,13 @@ import java.util.List;
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(value = {ParamNotFound.class})
+    @ExceptionHandler(value = {ParamNotFound.class, UserExists.class})
     protected ResponseEntity<Object> handleParamNotFound(RuntimeException ex, WebRequest request) {
         ApiErrorDTO errorDTO = new ApiErrorDTO(
                 HttpStatus.BAD_REQUEST,
                 ex.getMessage(),
-                Arrays.asList("Param Not Found")
-        );
+                Arrays.asList(ParamNotFound.class.getSimpleName(), UserExists.class.getSimpleName()));
+
         return handleExceptionInternal(ex, errorDTO, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
