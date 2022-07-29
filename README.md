@@ -8,10 +8,10 @@ Objetivo ��
 
 Para lograr la solicitud del cliente, deberás desarrollar una API que permita navegar por estos personajes y sus películas y se deberá exponer la información para que cualquier frontend pueda consumirla. Algunos elementos que debes tener en cuenta: 
 
-�� Utilizar Spring Boot. 
-�� No es necesario armar el Frontend. 
-�� Las rutas deberán seguir el patrón REST. 
-�� Utilizar la librería Spring Security. 
+ �� Utilizar Spring Boot. 
+ �� No es necesario armar el Frontend. 
+ �� Las rutas deberán seguir el patrón REST. 
+ �� Utilizar la librería Spring Security. 
 
 Requerimientos técnicos
 
