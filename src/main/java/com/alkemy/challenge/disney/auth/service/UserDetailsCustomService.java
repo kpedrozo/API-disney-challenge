@@ -4,7 +4,7 @@ import com.alkemy.challenge.disney.auth.dto.UserDTO;
 import com.alkemy.challenge.disney.auth.entity.UserEntity;
 import com.alkemy.challenge.disney.auth.repository.UserRepository;
 import com.alkemy.challenge.disney.exception.ErrorEnum;
-import com.alkemy.challenge.disney.exception.UserExists;
+import com.alkemy.challenge.disney.exception.UserError;
 import com.alkemy.challenge.disney.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -31,7 +31,7 @@ public class UserDetailsCustomService implements UserDetailsService {
     public UserDetails loadUserByUsername (String username) throws UsernameNotFoundException {
         UserEntity userEntity = userRepository.findByUsername(username);
         if (userEntity == null) {
-            throw new UserExists(ErrorEnum.USERINVALID.getMessage());
+            throw new UserError(ErrorEnum.USERINVALID.getMessage());
         }
         return new User(userEntity.getUsername(), userEntity.getPassword(), Collections.emptyList());
     }
@@ -44,7 +44,7 @@ public class UserDetailsCustomService implements UserDetailsService {
 
     public boolean save(UserDTO userDTO) {
         if (existInRepo(userDTO.getUsername())) {
-            throw new UserExists(ErrorEnum.USEREXISTS.getMessage());
+            throw new UserError(ErrorEnum.USEREXISTS.getMessage());
         }
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername(userDTO.getUsername());

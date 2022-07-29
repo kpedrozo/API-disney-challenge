@@ -2,8 +2,6 @@ package com.alkemy.challenge.disney.auth.filter;
 
 import com.alkemy.challenge.disney.auth.service.JwtUtils;
 import com.alkemy.challenge.disney.auth.service.UserDetailsCustomService;
-import com.alkemy.challenge.disney.exception.ErrorEnum;
-import com.alkemy.challenge.disney.exception.UserExists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
